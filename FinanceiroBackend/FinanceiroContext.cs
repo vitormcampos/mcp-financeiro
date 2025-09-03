@@ -1,5 +1,4 @@
-using System;
-using FinanceiroBackend.Models;
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceiroBackend;

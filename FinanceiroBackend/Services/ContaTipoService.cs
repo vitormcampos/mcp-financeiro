@@ -1,6 +1,5 @@
-using System;
+using Domain;
 using FinanceiroBackend.Dtos;
-using FinanceiroBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceiroBackend.Services;
@@ -35,14 +34,16 @@ public class ContaTipoService
 
     public async Task<ContaTipo> GetByIdAsync(string id)
     {
-        return await _context.ContaTipos.FirstAsync(c => c.Id == id);
+        return await _context.ContaTipos.FirstAsync(c => c.Id == id || c.Nome == id);
     }
 
-    public async Task<ContaTipo> UpdateAsync(string id, ContaTipo contaTipo)
+    public async Task<ContaTipo> UpdateAsync(string id, CreateContaTipo createContaTipo)
     {
         await _context
             .ContaTipos.Where(c => c.Id == id)
-            .ExecuteUpdateAsync(c => c.SetProperty(c => c.Nome, contaTipo.Nome));
+            .ExecuteUpdateAsync(c => c.SetProperty(c => c.Nome, createContaTipo.Nome));
+
+        var contaTipo = await GetByIdAsync(id);
 
         return contaTipo;
     }

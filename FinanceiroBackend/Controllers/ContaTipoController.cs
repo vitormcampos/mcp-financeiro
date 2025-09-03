@@ -1,7 +1,5 @@
 using FinanceiroBackend.Dtos;
-using FinanceiroBackend.Models;
 using FinanceiroBackend.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceiroBackend.Controllers;
@@ -35,17 +33,13 @@ public class ContaTipoController : ControllerBase
     public async Task<IActionResult> GetById(string id)
     {
         var result = await _contaTipoService.GetByIdAsync(id);
-        if (result == null)
-            return NotFound();
         return Ok(result);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, [FromBody] ContaTipo contaTipo)
+    public async Task<IActionResult> Update(string id, [FromBody] CreateContaTipo contaTipo)
     {
         var result = await _contaTipoService.UpdateAsync(id, contaTipo);
-        if (result == null)
-            return NotFound();
         return Ok(result);
     }
 

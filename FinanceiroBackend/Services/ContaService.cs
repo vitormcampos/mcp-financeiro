@@ -1,22 +1,40 @@
-using System;
+using Domain;
 using FinanceiroBackend.Dtos;
-using FinanceiroBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinanceiroBackend.Services;
 
-public class ContaService
+public class ContaService(FinanceiroContext context)
 {
-    private readonly FinanceiroContext _context;
-
-    public ContaService(FinanceiroContext context)
+    public async Task<IEnumerable<Conta>> GetAllAsync(GetAll query)
     {
-        _context = context;
-    }
+        var queryable = context.Contas.Include(conta => conta.Tipo).AsQueryable();
 
-    public async Task<IEnumerable<Conta>> GetAllAsync()
-    {
-        return await _context.Contas.ToListAsync();
+        if (query.From.HasValue)
+        {
+            queryable = queryable.Where(c =>
+                c.DataCriacao >= query.From.Value.ToDateTime(TimeOnly.MinValue)
+            );
+        }
+
+        if (query.To.HasValue)
+        {
+            queryable = queryable.Where(c =>
+                c.DataCriacao <= query.To.Value.ToDateTime(TimeOnly.MinValue)
+            );
+        }
+
+        if (!string.IsNullOrEmpty(query.status))
+        {
+            queryable = queryable.Where(c => c.Status == query.status);
+        }
+
+        if (!string.IsNullOrEmpty(query.type))
+        {
+            queryable = queryable.Where(c => c.Tipo.Nome == query.type);
+        }
+
+        return await queryable.ToListAsync();
     }
 
     public async Task<Conta> AddAsync(CreateConta createContaconta)
@@ -30,34 +48,36 @@ public class ContaService
             DataCriacao = DateTime.UtcNow,
         };
 
-        _context.Contas.Add(conta);
-        await _context.SaveChangesAsync();
+        context.Contas.Add(conta);
+        await context.SaveChangesAsync();
 
         return conta;
     }
 
     public async Task<Conta> GetByIdAsync(string id)
     {
-        return await _context.Contas.FirstAsync(c => c.Id == id);
+        return await context.Contas.FirstAsync(c => c.Id == id);
     }
 
-    public async Task<Conta> UpdateAsync(string id, Conta conta)
+    public async Task<Conta> UpdateAsync(string id, CreateConta createContaconta)
     {
-        _context
+        context
             .Contas.Where(c => c.Id == id)
             .ExecuteUpdate(c =>
-                c.SetProperty(c => c.TipoId, conta.TipoId)
-                    .SetProperty(c => c.Valor, conta.Valor)
-                    .SetProperty(c => c.Status, conta.Status)
+                c.SetProperty(c => c.TipoId, createContaconta.TipoId)
+                    .SetProperty(c => c.Valor, createContaconta.Valor)
+                    .SetProperty(c => c.Status, createContaconta.Status)
                     .SetProperty(c => c.DataCriacao, DateTime.UtcNow)
             );
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
+
+        var conta = await context.Contas.FirstAsync(c => c.Id == id);
         return conta;
     }
 
     public async Task DeleteAsync(string id)
     {
-        await _context.Contas.Where(c => c.Id == id).ExecuteDeleteAsync();
+        await context.Contas.Where(c => c.Id == id).ExecuteDeleteAsync();
     }
 }

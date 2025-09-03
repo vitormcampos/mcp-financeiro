@@ -1,7 +1,5 @@
 using FinanceiroBackend.Dtos;
-using FinanceiroBackend.Models;
 using FinanceiroBackend.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FinanceiroBackend.Controllers;
@@ -25,9 +23,9 @@ public class ContaController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] GetAll query)
     {
-        var result = await _contaService.GetAllAsync();
+        var result = await _contaService.GetAllAsync(query);
         return Ok(result);
     }
 
@@ -35,17 +33,13 @@ public class ContaController : ControllerBase
     public async Task<IActionResult> GetById(string id)
     {
         var result = await _contaService.GetByIdAsync(id);
-        if (result == null)
-            return NotFound();
         return Ok(result);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(string id, [FromBody] Conta conta)
+    public async Task<IActionResult> Update(string id, [FromBody] CreateConta conta)
     {
         var result = await _contaService.UpdateAsync(id, conta);
-        if (result == null)
-            return NotFound();
         return Ok(result);
     }
 

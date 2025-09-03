@@ -1,7 +1,7 @@
 using FinanceiroBackend;
 using FinanceiroBackend.Services;
 using Microsoft.EntityFrameworkCore;
-using Scalar.AspNetCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,21 @@ builder.Services.AddDbContext<FinanceiroContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddOpenApi();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "Financeiro API",
+            Version = "v1",
+            Description = "Documentação da API Financeiro",
+        }
+    );
+
+    var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+});
 
 builder.Services.AddScoped<ContaService>();
 builder.Services.AddScoped<ContaTipoService>();
@@ -23,13 +37,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     // Documentação OpenAPI JSON
-    app.MapOpenApi();
-
-    // Interface Scalar
-    app.MapScalarApiReference(options =>
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
     {
-        options.Title = "Financeiro API";
-        options.Theme = ScalarTheme.Default; // Light, Dark, Default
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
+        options.RoutePrefix = string.Empty;
     });
 }
 

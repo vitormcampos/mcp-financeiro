@@ -1,6 +1,4 @@
-using System;
-
-namespace FinanceiroBackend.Models;
+namespace Domain;
 
 public class Conta
 {
