@@ -1,0 +1,51 @@
+<div class="container-fluid">
+  <div class="row justify-content-center my-5">
+    <div class="col-3">
+      <div class="bg-white rounded-3 p-3">
+        <p>Receita</p>
+        <h4>{{ totalIncome() | currency : "BRL" }}</h4>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="bg-white rounded-3 p-3">
+        <p>Despesa</p>
+        <h4>{{ totalExpense() | currency : "BRL" }}</h4>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="bg-white rounded-3 p-3">
+        <p>Investimento</p>
+        <h4>{{ totalInvestment() | currency : "BRL" }}</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center p-3">
+    <div class="col-9 bg-white rounded-3 p-3">
+      <div class="row justify-content-between">
+        <div class="col bg-white">
+          <div class="">
+            <h3>Transações</h3>
+          </div>
+        </div>
+        <div class="col bg-white">
+          <div class="text-end">
+            <button class="btn btn-outline-primary me-2">
+              <i class="bi bi-funnel"></i>
+              Filtrar
+            </button>
+            <app-upsert />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-5">
+    <div class="col-9">
+      <div class="bg-white rounded-3 p-3">
+        <app-list />
+      </div>
+    </div>
+  </div>
+</div>
