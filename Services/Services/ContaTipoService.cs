@@ -1,8 +1,9 @@
+using Application;
 using Domain;
-using FinanceiroBackend.Dtos;
+using Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceiroBackend.Services;
+namespace Application.Services;
 
 public class ContaTipoService
 {

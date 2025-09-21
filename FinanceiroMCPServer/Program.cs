@@ -1,19 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Application.Ioc;
+using FinanceiroMCP;
 
-var builder = Host.CreateApplicationBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddConsole(consoleLogOptions =>
-{
-    // Configure all logs to go to stderr
-    consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
-});
+builder.Services.AddApplicationServices(builder.Configuration);
 
-builder
-    .Services.AddMcpServer()
-    .WithStdioServerTransport()
-    .WithPromptsFromAssembly()
-    .WithToolsFromAssembly();
+builder.Services.AddMcpServer().WithHttpTransport().WithTools<FinanceiroMCPTools>();
 
-await builder.Build().RunAsync();
+var app = builder.Build();
+
+app.MapMcp();
+
+app.Run();

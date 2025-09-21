@@ -1,27 +1,23 @@
 using Domain;
-using FinanceiroBackend.Dtos;
+using Domain.Dtos;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceiroBackend.Services;
+namespace Application.Services;
 
 public class ContaService(FinanceiroContext context)
 {
     public async Task<IEnumerable<Conta>> GetAllAsync(GetAll query)
     {
-        var queryable = context.Contas.Include(conta => conta.Tipo).AsQueryable();
+        var queryable = context.Contas.AsQueryable();
 
         if (query.From.HasValue)
         {
-            queryable = queryable.Where(c =>
-                c.DataCriacao >= query.From.Value.ToDateTime(TimeOnly.MinValue)
-            );
+            queryable = queryable.Where(c => c.CreatedAt >= query.From.Value);
         }
 
         if (query.To.HasValue)
         {
-            queryable = queryable.Where(c =>
-                c.DataCriacao <= query.To.Value.ToDateTime(TimeOnly.MinValue)
-            );
+            queryable = queryable.Where(c => c.CreatedAt <= query.To.Value);
         }
 
         if (!string.IsNullOrEmpty(query.status))
@@ -31,7 +27,7 @@ public class ContaService(FinanceiroContext context)
 
         if (!string.IsNullOrEmpty(query.type))
         {
-            queryable = queryable.Where(c => c.Tipo.Nome == query.type);
+            queryable = queryable.Where(c => c.Type == query.type);
         }
 
         return await queryable.ToListAsync();
@@ -42,10 +38,13 @@ public class ContaService(FinanceiroContext context)
         var conta = new Conta
         {
             Id = Guid.NewGuid().ToString(),
-            TipoId = createContaconta.TipoId,
-            Valor = createContaconta.Valor,
+            Description = createContaconta.Description,
+            Amount = createContaconta.Amount,
             Status = createContaconta.Status,
-            DataCriacao = DateTime.UtcNow,
+            Type = createContaconta.Type,
+            Mouth = DateTime.UtcNow.Month,
+            Year = DateTime.UtcNow.Year,
+            CreatedAt = DateTime.UtcNow,
         };
 
         context.Contas.Add(conta);
@@ -64,10 +63,9 @@ public class ContaService(FinanceiroContext context)
         context
             .Contas.Where(c => c.Id == id)
             .ExecuteUpdate(c =>
-                c.SetProperty(c => c.TipoId, createContaconta.TipoId)
-                    .SetProperty(c => c.Valor, createContaconta.Valor)
+                c.SetProperty(c => c.Description, createContaconta.Description)
+                    .SetProperty(c => c.Amount, createContaconta.Amount)
                     .SetProperty(c => c.Status, createContaconta.Status)
-                    .SetProperty(c => c.DataCriacao, DateTime.UtcNow)
             );
 
         await context.SaveChangesAsync();

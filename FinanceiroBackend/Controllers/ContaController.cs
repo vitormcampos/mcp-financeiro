@@ -1,8 +1,8 @@
-using FinanceiroBackend.Dtos;
-using FinanceiroBackend.Services;
+using Application.Services;
+using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 
-namespace FinanceiroBackend.Controllers;
+namespace Web.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

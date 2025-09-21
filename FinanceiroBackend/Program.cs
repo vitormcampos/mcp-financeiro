@@ -1,48 +1,54 @@
-using FinanceiroBackend;
-using FinanceiroBackend.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
+using Application.Ioc;
+using dotenv.net;
+using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
+using OpenAI.Chat;
+using Scalar.AspNetCore;
+
+DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adicionar DbContext com PostgreSQL
-builder.Services.AddDbContext<FinanceiroContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+builder.Services.AddCors();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc(
-        "v1",
-        new OpenApiInfo
-        {
-            Title = "Financeiro API",
-            Version = "v1",
-            Description = "Documentação da API Financeiro",
-        }
-    );
+builder.Services.AddOpenApi();
 
-    var xmlFilename = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-});
+builder.Services.AddChatClient(services =>
+    new ChatClientBuilder(
+        new ChatClient("gpt-4o-mini", builder.Configuration["OpenAI:ApiKey"]).AsIChatClient()
+    )
+        .UseFunctionInvocation()
+        .Build()
+);
 
-builder.Services.AddScoped<ContaService>();
-builder.Services.AddScoped<ContaTipoService>();
+builder.Services.AddApplicationServices(builder.Configuration);
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    // Documentação OpenAPI JSON
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
+    app.MapOpenApi();
+
+    // Interface Scalar
+    app.MapScalarApiReference(options =>
     {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Minha API v1");
-        options.RoutePrefix = string.Empty;
+        options.Title = "Financeiro API";
+        options.Theme = ScalarTheme.Default; // Light, Dark, Default
     });
+}
+
+if (app.Environment.IsProduction())
+{
+    app.UseCors(options =>
+        options.WithOrigins(builder.Configuration.GetValue<string>("App:Cors") ?? "")
+    );
+}
+else if (app.Environment.IsDevelopment())
+{
+    app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 }
 
 app.UseHttpsRedirection();

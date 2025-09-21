@@ -1,7 +1,7 @@
 using Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace FinanceiroBackend;
+namespace Application;
 
 public class FinanceiroContext : DbContext
 {

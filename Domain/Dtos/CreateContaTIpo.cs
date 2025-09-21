@@ -1,4 +1,4 @@
-namespace FinanceiroBackend.Dtos;
+namespace Domain.Dtos;
 
 public record class CreateContaTipo
 {

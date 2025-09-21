@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "FinanceiroMCPServer": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:55625;http://localhost:55626"
+    }
+  }
+}
