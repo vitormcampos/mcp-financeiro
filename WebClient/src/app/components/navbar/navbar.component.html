@@ -10,7 +10,9 @@
         </p>
       </div>
       <div class="col-2 d-flex align-items-center">
-        <button class="btn btn-danger">Chat com IA</button>
+        <button class="btn btn-danger" (click)="toggleChatAi()">
+          @if(showChatAi()) { Fechar } @else { Abrir} chat com IA
+        </button>
       </div>
     </div>
   </div>

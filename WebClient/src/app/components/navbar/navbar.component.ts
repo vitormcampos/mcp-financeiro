@@ -1,7 +1,8 @@
 import { Component, computed, inject } from '@angular/core';
-import { CashflowStore } from '../../stores/cashflow.service';
+import { CashflowStore } from '../../stores/cashflow.store';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
+import { ChatAiStore } from '../../stores/chat-ai.store';
 
 @Component({
   selector: 'app-navbar',
@@ -11,6 +12,7 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class NavbarComponent {
   private readonly cashFlowStore = inject(CashflowStore);
+  private readonly chatAiStore = inject(ChatAiStore);
 
   cashFlows = toSignal(this.cashFlowStore.get(), { initialValue: [] });
 
@@ -31,4 +33,10 @@ export class NavbarComponent {
 
     return totalIncome - totalExpense - totalInvestment;
   });
+
+  showChatAi = toSignal(this.chatAiStore.get(), { initialValue: false });
+
+  toggleChatAi() {
+    this.chatAiStore.set(!this.showChatAi());
+  }
 }

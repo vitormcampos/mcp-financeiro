@@ -10,7 +10,7 @@ import { CashFlowService } from '../../../services/cash-flow.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { concatMap, tap } from 'rxjs';
 import { CashFlow } from '../../../models/cash-flow';
-import { CashflowStore } from '../../../stores/cashflow.service';
+import { CashflowStore } from '../../../stores/cashflow.store';
 
 @Component({
   selector: 'app-upsert',
@@ -53,5 +53,9 @@ export class UpsertComponent {
 
   open(content: TemplateRef<any>) {
     this.modalService.open(content, { ariaLabelledBy: 'Novo Registro' });
+  }
+
+  close() {
+    this.modalService.dismissAll();
   }
 }

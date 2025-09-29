@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { CashFlowService } from '../../../services/cash-flow.service';
 import { tap } from 'rxjs';
-import { CashflowStore } from '../../../stores/cashflow.service';
+import { CashflowStore } from '../../../stores/cashflow.store';
 
 @Component({
   selector: 'app-list',
