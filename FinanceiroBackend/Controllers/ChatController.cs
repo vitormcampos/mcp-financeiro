@@ -25,17 +25,19 @@ public class ChatController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<string> Chat(ChatPrompt prompt)
+    public async Task<ChatResponseDto> Chat(ChatPrompt prompt)
     {
         var mcpClient = await McpClientFactory.CreateAsync(
-            new SseClientTransport(new SseClientTransportOptions { Endpoint = mcpUri })
+            new SseClientTransport(
+                new SseClientTransportOptions { Endpoint = mcpUri, Name = "FinanceiroMCP" }
+            )
         );
         var tools = await mcpClient.ListToolsAsync();
         var messages = new List<ChatMessage>
         {
             new ChatMessage(
                 ChatRole.System,
-                "Você é um assistente para consumir o MCP e entregar os dados de forma formatada e legivel para o usuário."
+                "Você é um assistente para consumir o MCP FinanceiroMCP e entregar os dados de forma formatada e legivel para o usuário."
             ),
             new(ChatRole.User, prompt.Message),
         };
@@ -55,6 +57,6 @@ public class ChatController : ControllerBase
         }
         messages.AddMessages(updates);
 
-        return result.ToString();
+        return new(result.ToString());
     }
 }
