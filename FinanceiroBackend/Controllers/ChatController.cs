@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using Domain.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.AI;
@@ -25,7 +26,7 @@ public class ChatController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ChatResponseDto> Chat(ChatPrompt prompt)
+    public async Task<ChatResponseDto> Chat(ChatPrompt prompt, CancellationToken cancellationToken)
     {
         var mcpClient = await McpClientFactory.CreateAsync(
             new SseClientTransport(
@@ -42,20 +43,11 @@ public class ChatController : ControllerBase
             new(ChatRole.User, prompt.Message),
         };
 
-        List<ChatResponseUpdate> updates = [];
-        StringBuilder result = new StringBuilder();
-
-        await foreach (
-            var update in _chatClient.GetStreamingResponseAsync(
-                messages,
-                new() { Tools = [.. tools] }
-            )
-        )
-        {
-            result.Append(update);
-            updates.Add(update);
-        }
-        messages.AddMessages(updates);
+        var result = await _chatClient.GetResponseAsync(
+            messages,
+            new() { Tools = [.. tools], AllowMultipleToolCalls = true },
+            cancellationToken
+        );
 
         return new(result.ToString());
     }

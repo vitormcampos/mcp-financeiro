@@ -1,7 +1,7 @@
 using Application.Ioc;
 using dotenv.net;
 using Microsoft.Extensions.AI;
-using Microsoft.Extensions.Configuration;
+using OllamaSharp;
 using OpenAI.Chat;
 using Scalar.AspNetCore;
 
@@ -17,14 +17,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddOpenApi();
 
 builder.Services.AddChatClient(services =>
-    new ChatClientBuilder(
-        new ChatClient("gpt-4o-mini", builder.Configuration["OpenAI:ApiKey"]).AsIChatClient()
-    )
-        .UseFunctionInvocation()
-        .Build()
+    builder.Environment.IsDevelopment()
+        ? new OllamaApiClient(
+            new Uri(builder.Configuration["Ollama:Url"]),
+            builder.Configuration["Ollama:Model"]
+        )
+        : new ChatClientBuilder(
+            new ChatClient("gpt-4o-mini", builder.Configuration["OpenAI:ApiKey"]).AsIChatClient()
+        )
+            .UseFunctionInvocation()
+            .Build()
 );
 
 builder.Services.AddApplicationServices(builder.Configuration);
+
+builder.Logging.AddConsole();
 
 var app = builder.Build();
 

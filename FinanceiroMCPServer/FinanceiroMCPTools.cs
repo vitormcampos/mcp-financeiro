@@ -19,31 +19,40 @@ public class FinanceiroMCPTools
         _contaTipoService = contaTipoService;
     }
 
-    [McpServerTool, Description("Chama o endpoint /contas da API REST")]
+    [
+        McpServerTool(Name = nameof(GetContas), Title = nameof(GetContas)),
+        Description("Chama o endpoint /contas da API REST")
+    ]
     public async Task<IEnumerable<Conta>> GetContas(
-        DateTime? From,
-        DateTime? To,
-        string status = "",
-        string type = ""
+        DateTime from,
+        DateTime to,
+        string status,
+        string category
     )
     {
-        var query = new GetAll(From, To, status, type);
+        var query = new GetAll(from, to, status, category);
 
         return await _contaService.GetAllAsync(query);
     }
 
-    [McpServerTool, Description("Chama o endpoint /contas/{id} da API REST")]
+    [
+        McpServerTool(Name = nameof(GetContaById), Title = nameof(GetContaById)),
+        Description("Chama o endpoint /contas/{id} da API REST")
+    ]
     public async Task<Conta?> GetContaById(string id)
     {
         return await _contaService.GetByIdAsync(id);
     }
 
-    [McpServerTool, Description("Chama o endpoint /contas da API REST para criar uma nova conta")]
+    [
+        McpServerTool(Name = nameof(CreateConta), Title = nameof(CreateConta)),
+        Description("Chama o endpoint /contas da API REST para criar uma nova conta")
+    ]
     public async Task<Conta?> CreateConta(
         string description,
         string status,
         decimal amount,
-        string type
+        string category
     )
     {
         return await _contaService.AddAsync(
@@ -52,7 +61,7 @@ public class FinanceiroMCPTools
                 Description = description,
                 Amount = amount,
                 Status = status,
-                Type = type,
+                Type = category,
             }
         );
     }
