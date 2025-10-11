@@ -1,12 +1,13 @@
 <div class="row">
   <div class="col-12" style="height: 85vh; overflow-y: scroll">
     <ul>
-      @for (item of chats(); track $index) { @if(item.origin == 'user') {
-
-      <li>{{ item.origin }}: {{ item.content }}</li>
-      } @else {
-      <markdown [data]="item.content"></markdown>
-      } }
+      @for (item of chats(); track $index) {
+        @if (item.origin == "user") {
+          <li>{{ item.origin }}: {{ item.content }}</li>
+        } @else {
+          <markdown [data]="item.content"></markdown>
+        }
+      }
     </ul>
   </div>
 </div>
