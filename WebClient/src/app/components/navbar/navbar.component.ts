@@ -24,11 +24,11 @@ export class NavbarComponent {
     const totalExpense = expense.reduce((acc, curr) => acc + curr.amount, 0);
 
     const investment = this.cashFlows().filter(
-      (cf) => cf.type === 'INVESTMENT'
+      (cf) => cf.type === 'INVESTMENT',
     );
     const totalInvestment = investment.reduce(
       (acc, curr) => acc + curr.amount,
-      0
+      0,
     );
 
     return totalIncome - totalExpense - totalInvestment;

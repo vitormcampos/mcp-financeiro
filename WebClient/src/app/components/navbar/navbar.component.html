@@ -6,12 +6,17 @@
       </div>
       <div class="col-2 d-flex align-items-center">
         <p class="fs-5 m-0 p-0">
-          Saldo: {{ totalCashFlow() | currency : "BRL" }}
+          Saldo: {{ totalCashFlow() | currency: "BRL" }}
         </p>
       </div>
       <div class="col-2 d-flex align-items-center">
         <button class="btn btn-danger" (click)="toggleChatAi()">
-          @if(showChatAi()) { Fechar } @else { Abrir} chat com IA
+          @if (showChatAi()) {
+            Fechar
+          } @else {
+            Abrir
+          }
+          chat com IA
         </button>
       </div>
     </div>

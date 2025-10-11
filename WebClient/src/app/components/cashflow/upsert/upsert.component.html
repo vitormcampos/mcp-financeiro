@@ -33,10 +33,10 @@
         required
       >
         <option value="">Selecione uma opção</option>
-        @for(status of expectedStatuses; track $index) {
-        <option [value]="status[0]">
-          {{ status[1] }}
-        </option>
+        @for (status of expectedStatuses; track $index) {
+          <option [value]="status[0]">
+            {{ status[1] }}
+          </option>
         }
       </select>
       <select
@@ -47,10 +47,10 @@
         required
       >
         <option value="">Selecione uma opção</option>
-        @for(type of expectedTypes; track $index) {
-        <option [value]="type[0]">
-          {{ type[1] }}
-        </option>
+        @for (type of expectedTypes; track $index) {
+          <option [value]="type[0]">
+            {{ type[1] }}
+          </option>
         }
       </select>
     </form>

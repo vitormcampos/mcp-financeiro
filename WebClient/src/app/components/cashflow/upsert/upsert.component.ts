@@ -1,10 +1,4 @@
-import {
-  Component,
-  inject,
-  output,
-  TemplateRef,
-  viewChild,
-} from '@angular/core';
+import { Component, inject, TemplateRef } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CashFlowService } from '../../../services/cash-flow.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -46,7 +40,7 @@ export class UpsertComponent {
         }),
         concatMap(() => {
           return this.cashFlowService.getAll();
-        })
+        }),
       )
       .subscribe((cashFlows: CashFlow[]) => this.cashFlowStore.set(cashFlows));
   }
