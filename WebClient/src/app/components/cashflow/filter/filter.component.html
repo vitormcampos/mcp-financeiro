@@ -1,0 +1,78 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Filtrar registros</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form #filterForm="ngForm">
+      <div class="row g-2">
+        @for (formField of formFields; track $index) {
+          <div [className]="formField.columnsWidth">
+            @if (["text", "number"].includes(formField.type)) {
+              <input
+                [name]="formField.name"
+                [type]="formField.type"
+                class="form-control"
+                [placeholder]="formField.label"
+                [ariaLabel]="formField.label"
+                ngModel
+              />
+            }
+            @if (formField.type === "select") {
+              <select
+                [name]="formField.name"
+                class="form-select"
+                [ariaLabel]="formField.label"
+                ngModel
+              >
+                <option value="">Selecione</option>
+                @for (option of formField.options; track $index) {
+                  <option [value]="option.value">
+                    {{ option.label }}
+                  </option>
+                }
+              </select>
+            }
+            @if (formField.type === "date") {
+              <div class="input-group">
+                <input
+                  [name]="formField.name"
+                  class="form-control"
+                  placeholder="Mês de referência"
+                  name="dp"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  (click)="d.toggle()"
+                  ngModel
+                />
+                <button
+                  class="btn btn-outline-secondary bi bi-calendar3"
+                  (click)="d.toggle()"
+                  type="button"
+                ></button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="submit(filterForm)"
+    >
+      Salvar
+    </button>
+  </div>
+</ng-template>
+<button class="btn btn-outline-primary me-2" (click)="open(content)">
+  <i class="bi bi-funnel"></i>
+  Filtrar
+</button>

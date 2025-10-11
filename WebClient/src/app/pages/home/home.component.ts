@@ -7,10 +7,17 @@ import { UpsertComponent } from '../../components/cashflow/upsert/upsert.compone
 import { CashflowStore } from '../../stores/cashflow.store';
 import { ChatAiStore } from '../../stores/chat-ai.store';
 import { ChatAiComponent } from '../../components/chat-ai/chat-ai.component';
+import { FilterComponent } from '../../components/cashflow/filter/filter.component';
 
 @Component({
   selector: 'app-home',
-  imports: [ListComponent, CurrencyPipe, UpsertComponent, ChatAiComponent],
+  imports: [
+    ListComponent,
+    CurrencyPipe,
+    UpsertComponent,
+    ChatAiComponent,
+    FilterComponent,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
 })
