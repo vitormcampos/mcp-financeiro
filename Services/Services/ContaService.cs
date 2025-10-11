@@ -6,28 +6,43 @@ namespace Application.Services;
 
 public class ContaService(FinanceiroContext context)
 {
-    public async Task<IEnumerable<Conta>> GetAllAsync(GetAll query)
+    public async Task<IEnumerable<Conta>> GetAllAsync(ContasGetAll query)
     {
         var queryable = context.Contas.AsQueryable();
 
-        if (query.From.HasValue)
+        if (query.Description is not null)
         {
-            queryable = queryable.Where(c => c.CreatedAt >= query.From.Value);
+            queryable = queryable.Where(c => c.Description.Contains(query.Description));
         }
 
-        if (query.To.HasValue)
+        if (query.MinValue > 0)
         {
-            queryable = queryable.Where(c => c.CreatedAt <= query.To.Value);
+            queryable = queryable.Where(c => c.Amount >= query.MinValue);
         }
 
-        if (!string.IsNullOrEmpty(query.status))
+        if (query.MaxValue > 0)
         {
-            queryable = queryable.Where(c => c.Status == query.status);
+            queryable = queryable.Where(c => c.Amount <= query.MaxValue);
         }
 
-        if (!string.IsNullOrEmpty(query.type))
+        if (query.Month > 0)
         {
-            queryable = queryable.Where(c => c.Type == query.type);
+            queryable = queryable.Where(c => c.Mouth == query.Month);
+        }
+
+        if (query.Year > 0)
+        {
+            queryable = queryable.Where(c => c.Year == query.Year);
+        }
+
+        if (!string.IsNullOrEmpty(query.Status))
+        {
+            queryable = queryable.Where(c => c.Status == query.Status);
+        }
+
+        if (!string.IsNullOrEmpty(query.Type))
+        {
+            queryable = queryable.Where(c => c.Type == query.Type);
         }
 
         return await queryable.ToListAsync();
@@ -55,7 +70,7 @@ public class ContaService(FinanceiroContext context)
 
     public async Task<Conta> GetByIdAsync(string id)
     {
-        return await context.Contas.FirstAsync(c => c.Id == id);
+        return await context.Contas.FirstAsync(c => c.Id == id || c.Description.Contains(id));
     }
 
     public async Task<Conta> UpdateAsync(string id, CreateConta createContaconta)

@@ -23,7 +23,7 @@ public class ContaController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] GetAll query)
+    public async Task<IActionResult> GetAll([FromQuery] ContasGetAll query)
     {
         var result = await _contaService.GetAllAsync(query);
         return Ok(result);
