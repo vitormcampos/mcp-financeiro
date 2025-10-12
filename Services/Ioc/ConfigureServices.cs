@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Application.Services;
+﻿using Application.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,7 +19,6 @@ public static class ConfigureServices
         });
 
         services.AddScoped<ContaService>();
-        services.AddScoped<ContaTipoService>();
 
         return services;
     }
