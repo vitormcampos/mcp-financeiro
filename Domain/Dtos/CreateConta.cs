@@ -8,7 +8,7 @@ public class CreateConta
     /// Id do Tipo de conta
     /// </summary>
     [Required]
-    public string Description { get; init; }
+    public required string Description { get; init; }
 
     /// <summary>
     /// Valor da conta a ser registrada
@@ -25,7 +25,7 @@ public class CreateConta
         "PAID",
         ErrorMessage = "Status inválido. Valores permitidos: PENDING, PAID."
     )]
-    public string Status { get; init; }
+    public required string Status { get; init; }
 
     [Required]
     [AllowedValues(
@@ -34,5 +34,5 @@ public class CreateConta
         "INVESTMENT",
         ErrorMessage = "Status inválido. Valores permitidos: INCOME, EXPENSE ou INVESTMENT."
     )]
-    public string Type { get; init; }
+    public required string Type { get; init; }
 }
