@@ -3,7 +3,8 @@ using FinanceiroMCP;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 builder.Services.AddMcpServer().WithHttpTransport().WithTools<FinanceiroMCPTools>();
 

@@ -27,7 +27,9 @@ builder.Services.AddChatClient(services =>
         .Build()
 );
 
-builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddApplicationServices();
 
 builder.Logging.AddConsole();
 

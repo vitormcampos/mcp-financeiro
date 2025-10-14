@@ -9,4 +9,5 @@ public class FinanceiroContext : DbContext
         : base(options) { }
 
     public DbSet<Conta> Contas { get; set; }
+    public DbSet<User> Users { get; set; }
 }
