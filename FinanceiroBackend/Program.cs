@@ -1,7 +1,6 @@
 using Application.Ioc;
 using dotenv.net;
 using Microsoft.Extensions.AI;
-using OllamaSharp;
 using OpenAI.Chat;
 using Scalar.AspNetCore;
 using Web.Hubs;
@@ -9,6 +8,9 @@ using Web.Hubs;
 DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddJwtAuthentication(builder.Configuration);
 
 builder.Services.AddCors();
 
@@ -27,11 +29,7 @@ builder.Services.AddChatClient(services =>
         .Build()
 );
 
-builder.Services.AddDatabase(builder.Configuration);
-builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddApplicationServices();
-
-builder.Logging.AddConsole();
 
 var app = builder.Build();
 
@@ -45,7 +43,7 @@ if (app.Environment.IsDevelopment())
         options =>
         {
             options.Title = "Financeiro API";
-            options.Theme = ScalarTheme.Default; // Light, Dark, Default
+            options.Theme = ScalarTheme.Default;
         }
     );
 }

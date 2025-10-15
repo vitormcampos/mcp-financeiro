@@ -27,7 +27,7 @@ public class JwtService
             new Claim(ClaimTypes.Name, user.Username),
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+        var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_secret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(

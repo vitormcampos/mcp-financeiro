@@ -1,11 +1,13 @@
 using Application.Services;
 using Domain.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize]
 public class ContaController : ControllerBase
 {
     private readonly ContaService _contaService;
